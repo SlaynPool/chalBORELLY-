@@ -82,8 +82,10 @@ int main(int argc, char *argv[]){
   for ( y ;mpz_cmp( maCourbe.mod,y)==1;mpz_add(y,y,un)){
        //monPoint.y = *y;
        mpz_set(monPoint.y,y);
-       if(verif(&maCourbe, &monPoint)==0){
-           printf("bite au cas ou ");
+       int result;
+       result=verif(&maCourbe, &monPoint);
+       if(result==0){
+           //printf("bite au cas ou ");
            char * result;
            //mpz_get_str(result,10,y);
            printf("%s est une solution \n",mpz_get_str(result,10,y));
@@ -91,7 +93,7 @@ int main(int argc, char *argv[]){
        }else{
             char *cy;
             //mpz_get_str(cy,10,y);
-            printf("%s\n",mpz_get_str(cy,10,y));
+           // printf("%s\n",mpz_get_str(cy,10,y));
 
        }    
    }
