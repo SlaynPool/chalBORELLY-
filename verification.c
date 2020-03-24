@@ -5,6 +5,28 @@
 #include <unistd.h>
 #include "verification.h"
 // Pour debuter, on veux juste faire des verifications si des points sont sur la courbe 
+int compute(courbe_s *maCourbe, point_s *monPoint){
+    if( maCourbe->compute==0){ 
+        mpz_t xxx;
+        mpz_init(xxx);
+        mpz_t courbe;
+        mpz_init(courbe);
+        mpz_t ax;
+        mpz_init(ax);
+
+        mpz_pow_ui(xxx, monPoint->x,3); // x^3
+        mpz_mul(ax,maCourbe->a,monPoint->x); //ax 
+        mpz_add(courbe, xxx,ax); //courbe = x^3+ax
+        mpz_add(courbe, courbe, maCourbe->b); // courbe = x^3 + ax + b 
+        mpz_mod(courbe,courbe,maCourbe-> mod);
+        mpz_set(maCourbe->courbe,courbe);  
+        maCourbe->compute=1;
+   }
+    return maCourbe->compute;
+}
+
+
+
 
 int verif(courbe_s *maCourbe, point_s *monPoint){
 
@@ -20,26 +42,12 @@ int verif(courbe_s *maCourbe, point_s *monPoint){
    //yy=  (monPoint->y* monPoint->y)%maCourbe->mod;
   // char *cyy;
   // mpz_out_str(stdout,10,yy);
- 
-
-  
- //x^3+ax+b%p
-   mpz_t courbe;
-   mpz_init(courbe);
-   mpz_t xxx;
-   mpz_init(xxx);
-   mpz_pow_ui(xxx, monPoint->x,3);
-   
-   mpz_t ax;
-   mpz_init(ax);
-   mpz_mul(ax,maCourbe->a,monPoint->x);
-   mpz_add(courbe, xxx,ax);
-   mpz_add(courbe, courbe, maCourbe->b);
-   mpz_mod(courbe,courbe,maCourbe-> mod);
+   compute(maCourbe, monPoint);
+      
    printf("y^2=");
    mpz_out_str(stdout,10,yy);
    printf("\n courbe = ");
-   mpz_out_str(stdout,10,courbe);
+   mpz_out_str(stdout,10,maCourbe->courbe);
    printf("\n"); 
 
    // int  courbe=((monPoint->x*monPoint->x*monPoint->x)+(maCourbe->a*monPoint->x)+maCourbe->b)%maCourbe->mod;
@@ -51,7 +59,7 @@ int verif(courbe_s *maCourbe, point_s *monPoint){
     //printf(" yy = %d\n", yy);
    //²printf(" courbe = %d\n",courbe);
    
-   if (mpz_cmp(yy,courbe)==0){
+   if (mpz_cmp(yy,maCourbe->courbe)==0){
      // printf("P(%d;%d) est bien sur la courbe\n",monPoint->x,monPoint->y);
        return 0;
    }
