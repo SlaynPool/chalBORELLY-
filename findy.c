@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
    char b[]="2455155546008943817740293915197451784769108058161191238065";
    char mod[]="6277101735386680763835789423207666416083908700390324961279";
    char x[]="4186469355574186740522149727049440186996809918465310609521"; 
-  /* 
+ /*
    char a[]="31";
    char b[]="17";
    char mod[]="97";
@@ -80,44 +80,32 @@ int main(int argc, char *argv[]){
  * si delta > 0 x1=−b−sqrt(Δ)/(2a) et x2=−b+sqrt(Δ)/2a
  */
     compute( &maCourbe,&monPoint);
-    mpz_t delta;
-    mpz_init(delta);
-    mpz_mul_ui(delta, maCourbe.courbe, 4); // vu que f(y)= -y^2+ courbe; a= -1, b= 0, c = courbe donc delta 0^2-4*-1*courbe = 4*courbe
-    if(mpz_cmp_ui(delta, 0)==0){
-        printf("Il n'y qu'une solution y = 0 ");
+    mpz_t valDelta;
+    mpz_init(valDelta);
+    int d=delta(&valDelta, &maCourbe);
+    if(d==0){
+        printf("Une Solution y=0 \n"); // Je peux le prouver
+    } 
+    if(d<0){
+        printf("Pas De solution \n");
 
-    }else{
-    if(mpz_cmp_ui( delta, 0)>0){
+    }
+    if( d> 0){
         mpz_t x1;
-        mpz_t x2; 
+        mpz_t x2;
         mpz_init(x1);
         mpz_init(x2);
-        mpz_root(x1,delta,20);// racine(delta)
-        mpz_mul_si(x1, x1, -1); // -racine(delta)
-        mpz_t deuxa; 
-        mpz_init(deuxa);
-        char c2a[]="-2";
-        mpz_set_str(deuxa,c2a, 10);
-        mpz_cdiv_q(x1,x1,deuxa); //-racine(delta)/2*-1 
-        
-        
-        mpz_root(x2,delta,20);// racine(delta) // ,20 pour 20 nombres après la virgule
-        mpz_cdiv_q(x1,x1,deuxa); //-racine(delta)/2*-1 
-        printf("2 solutions: \n");
-        printf("y1 = ");
+        printf(" 2solutions\n");
+        calculSoluce(&valDelta, &x1,&x2);
+        printf("Delta = "); 
+        mpz_out_str(stdout,10,valDelta);
+        printf( "\n y1=");
         mpz_out_str(stdout,10,x1);
-        printf("\ny2= ");
+        printf(" \n y2 =");
         mpz_out_str(stdout,10,x2);
         printf("\n");
 
-
-   }else{
-    printf(" PAS DE SOLUTION");
-
-   }
-}
-
-
+    }
 
 
 

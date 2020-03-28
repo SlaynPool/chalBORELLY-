@@ -13,7 +13,6 @@ int compute(courbe_s *maCourbe, point_s *monPoint){
         mpz_init(courbe);
         mpz_t ax;
         mpz_init(ax);
-
         mpz_pow_ui(xxx, monPoint->x,3); // x^3
         mpz_mul(ax,maCourbe->a,monPoint->x); //ax 
         mpz_add(courbe, xxx,ax); //courbe = x^3+ax
@@ -24,6 +23,64 @@ int compute(courbe_s *maCourbe, point_s *monPoint){
    }
     return maCourbe->compute;
 }
+
+int delta(mpz_t *valDelta, courbe_s *maCourbe){
+    //b^2-4ac ON aura toujours une fonction f(x)= x^2-courbe
+    //a=1 b=0 c=-courbe donc 
+    //valDelta= 0^2 -4*-courbe
+    mpz_t moinsCourbe;
+    mpz_init(moinsCourbe);
+    mpz_mul_si(moinsCourbe, maCourbe->courbe, -1);
+    mpz_mul_si(*valDelta, moinsCourbe,-4);
+    if(mpz_cmp_ui(*valDelta,0)==0){
+        return 0;
+    }
+    if(mpz_cmp_ui(*valDelta,0)>0){
+        return 1;
+
+    }
+    if(mpz_cmp_ui(*valDelta,0)<0){
+        return -1;
+
+    }
+}
+
+int calculSoluce(mpz_t *valDelta, mpz_t *x1, mpz_t *x2){
+
+    mpz_t racineDelta;
+    mpz_init(racineDelta);
+
+    mpz_t moinsRacineDelta;
+    mpz_init(moinsRacineDelta);
+
+    mpz_sqrt(racineDelta,*valDelta);
+    mpz_div_ui(*x1, racineDelta,2);
+
+    //x2
+    mpz_mul_si(moinsRacineDelta, racineDelta, -1);
+    mpz_div_ui(*x2, moinsRacineDelta,2);
+    return 0;
+
+
+    
+             
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
