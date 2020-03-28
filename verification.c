@@ -43,6 +43,7 @@ int delta(mpz_t *valDelta, courbe_s *maCourbe){
         return -1;
 
     }
+    return 0;
 }
 
 int calculSoluce(mpz_t *valDelta, mpz_t *x1, mpz_t *x2){

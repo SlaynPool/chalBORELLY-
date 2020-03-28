@@ -14,23 +14,33 @@ int main(int argc, char *argv[]){
    mpz_init(monPoint.x); 
    mpz_init(monPoint.y);
 
-
+/*
    char a[]="-3";
    char b[]="2455155546008943817740293915197451784769108058161191238065";
    char mod[]="6277101735386680763835789423207666416083908700390324961279";
    char x[]="4186469355574186740522149727049440186996809918465310609521"; 
- /*
+ */
    char a[]="31";
    char b[]="17";
    char mod[]="97";
-   char x[]="63";*/
+   char x[]="63";
 
    //x=63,a=31,b=17 et p=97
    mpz_set_str(maCourbe.a,a, 10);
    mpz_set_str(maCourbe.b,b, 10);
    mpz_set_str(maCourbe.mod,mod, 10);
    mpz_set_str(monPoint.x,x, 10);
- 
+
+        printf(" \n a =");
+        mpz_out_str(stdout,10,maCourbe.a);
+        printf(" \n b =");
+        mpz_out_str(stdout,10,maCourbe.b);
+        printf(" \n mod =");
+        mpz_out_str(stdout,10,maCourbe.mod);
+        printf(" \n x =");
+        mpz_out_str(stdout,10,monPoint.x);
+        printf("\n");
+
 
 /* En faite on n'a juste à resoudre le polynome y^2-courbe = 0 
  * si  b² – 4ac  < 0 pas de solution;
