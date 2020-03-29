@@ -18,10 +18,10 @@ int main(int argc, char *argv[]){
    Le PROBLEME est que meme dans un unsigned long long les nombres ne rentres pas
    Par ce que après le nombre d'operations max est egale à maCourbe.mod si on fait toute les operations il ya sans doute moyen de reduire le cout
    */
-   maCourbe.a = 31;
-   maCourbe.b = 17;
-   maCourbe.mod = 97;
-   monPoint.x = 63;
+   maCourbe.a = -1;
+   maCourbe.b = 0;
+   maCourbe.mod = 61;
+   monPoint.x = 8;
    
    int  y;
    for ( y=0 ;y < maCourbe.mod;y++){

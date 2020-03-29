@@ -48,7 +48,32 @@ int main(int argc, char *argv[]){
  * si delta > 0 x1=−b−sqrt(Δ)/(2a) et x2=−b+sqrt(Δ)/2a
  */
     compute( &maCourbe,&monPoint);
-    mpz_t valDelta;
+    mpz_t res1;
+    mpz_t res2;
+   // mpz_t courbeCompute;
+   // mpz_t myMod;
+    mpz_init(res1);
+    mpz_init(res2);
+   // mpz_init(courbeCompute);
+   
+    if(TonnelliShanks(&res1,&res2, &maCourbe.courbe, &maCourbe.mod)==0){
+        printf("2solutions\n y=");
+        mpz_out_str(stdout,10,res1);
+        printf("\n y= ");
+         mpz_out_str(stdout,10,res2);
+    
+    }else{
+        printf("Pas de Solution");
+    }
+
+
+
+
+
+
+
+
+/*    mpz_t valDelta;
     mpz_init(valDelta);
     int d=delta(&valDelta, &maCourbe);
     if(d==0){
@@ -76,7 +101,7 @@ int main(int argc, char *argv[]){
     }
 
 
-
+*/
 
 
    /*
