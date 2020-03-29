@@ -17,8 +17,9 @@ int compute(courbe_s *maCourbe, point_s *monPoint){
         mpz_mul(ax,maCourbe->a,monPoint->x); //ax 
         mpz_add(courbe, xxx,ax); //courbe = x^3+ax
         mpz_add(courbe, courbe, maCourbe->b); // courbe = x^3 + ax + b 
-        mpz_mod(courbe,courbe,maCourbe-> mod);
-        mpz_set(maCourbe->courbe,courbe);  
+        mpz_set(maCourbe->courbe,courbe); 
+        mpz_clear(xxx);
+        mpz_clear(courbe); 
         maCourbe->compute=1;
    }
     return maCourbe->compute;
@@ -68,11 +69,36 @@ int calculSoluce(mpz_t *valDelta, mpz_t *x1, mpz_t *x2){
 
 
 }
+int findq(mpz_t q, mpz_t s){
+// q, s = p - 1, 0
+//    while q % 2 == 0:
+//        s += 1
+//        q //= 2
+    mpz_t stmp;
+    mpz_init(stmp);
+    mpz_set_ui(stmp,0);
+  //  printf("\non a init stmp");
+    mpz_t modq;
+    mpz_init(modq);
 
+    while(mpz_mod_ui(modq,q,2)==0){
+        mpz_add_ui(stmp,stmp,1);
+        mpz_fdiv_q_ui(q,q,2);
+        
+        
+    }
+    printf("q= ");
+    mpz_out_str(stdout, 10,q);
+    printf("\n");
+    return 0;
+
+
+}
 
 // Calcul le residu quadratic mais en vrai je sais pas trop ce que sait return -1 ou 1, -1 si c'est bon, et 1 si pas bon, sachant que res prend sera soit -1 soit la valeur de legendre_s
 int legendre_Symbole(mpz_t *res, mpz_t *a, mpz_t *mod){
     // On va stocker le resultat ici
+   // printf("Je suis dans legrendre\n");
     mpz_t legendre_s;
     mpz_init(legendre_s);
     //On va stocker le resultat de (p-1)/2 ici
@@ -84,6 +110,9 @@ int legendre_Symbole(mpz_t *res, mpz_t *a, mpz_t *mod){
     mpz_div_ui(puissance, tmp,2); //(p-1)/2
     //FIN DE (p-1)/2
     mpz_powm(legendre_s, *a, puissance, *mod);
+    //printf("\n legendre_s");
+    //mpz_out_str(stdout, 10,legendre_s);
+
     if(mpz_cmp(legendre_s, tmp)==0){
         char moinsun[]="-1";
         mpz_set_str(*res,moinsun,10); 
@@ -96,6 +125,12 @@ int legendre_Symbole(mpz_t *res, mpz_t *a, mpz_t *mod){
 }
 // retourne 0 si solution et -1 si pas de solution, solution dispo dans res1 et res2
 int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
+    printf("a= ");
+    mpz_out_str(stdout, 10,*a);
+    printf("\nmod= ");
+    mpz_out_str(stdout, 10,*mod);
+
+
     //a%mod
     mpz_t aMODOLUmod;
     mpz_init(aMODOLUmod);
@@ -105,14 +140,19 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     if(mpz_cmp_ui(aMODOLUmod,0)==0){
         mpz_set_ui(*res1,0);
         mpz_set_ui(*res2,0);
+        mpz_clear(aMODOLUmod);
         return 0;
     }
     //si a = 2 alors solution = 2
     if(mpz_cmp_ui(aMODOLUmod,2)==0){
         mpz_set(*res1,*a);
         mpz_set_ui(*res2,0);
+        mpz_clear(aMODOLUmod);
         return 0;
     }
+    mpz_set(*a, aMODOLUmod);
+    mpz_clear(aMODOLUmod);
+
     
     //Si legendre_Symbole(a,mod) est different de 1 pas de solution
     mpz_t res;
@@ -121,13 +161,14 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     if(mpz_cmp_ui(res,1)!=0){
         return -1;
     }
+    mpz_clear(res);
 
     
     //Si mod%4= 3 alors solution= (a^(mod+1)/4)modulo(mod) et solution = mod-((a^(mod+1)/4)modulo(mod))
     mpz_t modMODULOquatre;
     mpz_init(modMODULOquatre);
     mpz_mod_ui(modMODULOquatre,*mod,4);
-    if(mpz_cmp_ui(modMODULOquatre,3)==3){
+    if(mpz_cmp_ui(modMODULOquatre,3)==0){
         // solution= (a^(mod+1)/4)modulo(mod)
         mpz_t tmp1;
         mpz_init(tmp1);
@@ -138,9 +179,11 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
         mpz_powm(*res1, *a, tmp2, *mod); //(a^(mod+1)/4)%mod
         
         mpz_sub(*res2, *mod, *res1);
+        mpz_clear(modMODULOquatre);
+
         return 0; 
     }
-
+    mpz_clear(modMODULOquatre);
 
 
     //
@@ -151,34 +194,15 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     mpz_t q;
     mpz_init(q);
     mpz_sub_ui(q,*mod, 1);
-
+    //printf("mod= ");
+    //mpz_out_str(stdout, 10,*mod);
+    //printf("\n q");
+    //mpz_out_str(stdout, 10,q);
 
     //s = 0
     mpz_t s;
     mpz_init(s);
-    mpz_set_ui(s,0);
-    //
-    //tant que q%2 == 0{
-    mpz_t qMODdeux;
-    mpz_init(qMODdeux);
-    mpz_mod_ui(qMODdeux,q,2);
-    while (mpz_cmp_ui(qMODdeux,0)==0){
-
-    //  s=s+1
-        mpz_t tmps;
-        mpz_init(tmps);
-        mpz_add_ui(tmps, s, 1);
-        mpz_set(s, tmps);
-    //  q / 2 division arrondie à l'entier inferieur
-        mpz_t qdivdeux;
-        mpz_init(qdivdeux);
-        mpz_fdiv_q_ui(qdivdeux, q ,2);
-        mpz_mod_ui(qMODdeux, qdivdeux,2);
-    //
-    }
-    mpz_set(qMODdeux,q );
-
-    
+    findq(q,s); 
     //z = 1
     mpz_t z;
     mpz_init(z);
@@ -195,16 +219,27 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
        mpz_init(ztmp);
        mpz_add_ui(ztmp, z, 1);
        mpz_set(z, ztmp);
+       mpz_clear(ztmp);
        legendre_Symbole(&ls,&z, mod);
     //}
     }
+    printf("z=");
+    mpz_out_str(stdout, 10,z);
+    printf("\n");
+
     //
     //c = (z^q)%mod
     mpz_t c;
     mpz_init(c);
     mpz_powm(c, z,q,*mod);
     //
+    printf("c=");
+    mpz_out_str(stdout, 10,c);
+    printf("\n");
     //x= (a^((q+1))/2)%p
+    printf("q=");
+    mpz_out_str(stdout, 10,q);
+    printf("\n");
 
     mpz_t x; 
     mpz_init(x);
@@ -212,11 +247,15 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     mpz_t qPlusUn;
     mpz_init(qPlusUn);
     mpz_add_ui(qPlusUn, q,1); //q+1
+
+
     mpz_t qPlusUnDiv2;
     mpz_init(qPlusUnDiv2);
-    mpz_div_ui(qPlusUnDiv2,q,2); // (q+1)/2
+    mpz_div_ui(qPlusUnDiv2,qPlusUn,2); // (q+1)/2
     mpz_powm(x, *a,qPlusUnDiv2,*mod);
-
+    printf("x=");
+    mpz_out_str(stdout, 10,x);
+    printf("\n");
 
 
 
@@ -224,6 +263,9 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     mpz_t t;
     mpz_init(t);
     mpz_powm(t, *a,q,*mod);
+    printf("t=");
+    mpz_out_str(stdout, 10,t);
+    printf("\n");
     //
     //m = s ?? btw
     mpz_t m;
@@ -231,47 +273,39 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     mpz_set(m, s);
     //
     //
-    while(mpz_cmp_ui(t,1)!=1){
+    mpz_t i;
+    mpz_init(i);
+
+    while(mpz_cmp_ui(t,1)!=0){
 
     //tant que t != 1{
     //  i = 1 
-    mpz_t i;
-    mpz_init(i);
-    mpz_set_ui(i,1);
+        mpz_set_ui(i,0);
     //  e = 2
-    mpz_t e;
-    mpz_init(e);
-    mpz_set_ui(e,2);
+        mpz_t e;
+        mpz_init(e);
+        mpz_set_ui(e,2);
     
     //  pour i allant de 1 à m {
-    while(mpz_cmp(i,m)!=0){
-        mpz_add_ui(i,i,1);
-        mpz_t tPuiseModp;
-        mpz_init(tPuiseModp);
-        mpz_powm(tPuiseModp,t,e,*mod);
+        while(mpz_cmp(i,m)!=0){
+            mpz_add_ui(i,i,1);
+            mpz_powm(t,t,e,*mod);
+        
         //      si (t^e)%mod == 1{
-        if(mpz_cmp_ui(t,1)==0){
+            if(mpz_cmp_ui(t,1)==0){
 //          fin du for
-
-            break;
+                printf("coucou");
+                break;
   //      sinon{
-        }else{
+            }else{
    //         e = e*2
             mpz_mul_ui(e,e,2);
-        }
+            }
 
-    }
-
-   
-       
-  
- 
-    // 
-    //
-    //  
-    //
+        } 
     //  on cree de nouvelle valeurs:
     //  b= (c expo(m-i-1))%p
+        
         mpz_t b;
         mpz_init(b);
         mpz_t miun;
@@ -279,7 +313,7 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
         mpz_sub(miun, m,i);
         mpz_sub_ui(miun,miun, 1);
         mpz_powm(b,c,miun,*mod);
-    
+        mpz_clear(miun);
     //  x= (x*b)%p
         mpz_mul(x,x,b);
         mpz_mod(x,x,*mod);
@@ -293,6 +327,8 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
         mpz_mod(c,c,*mod);
     //  m=i
         mpz_set(m,i);
+        printf("Etape tmp \n");
+
     //
     //}
     //
@@ -303,6 +339,7 @@ int TonnelliShanks(mpz_t *res1, mpz_t *res2, mpz_t *a, mpz_t *mod){
     mpz_init(modmoinsx);
     mpz_sub(modmoinsx, *mod,x);
     mpz_set( *res2, modmoinsx);
+    mpz_clear(modmoinsx);
     return 0;
     //return x et p-x
     //

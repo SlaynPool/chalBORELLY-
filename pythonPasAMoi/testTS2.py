@@ -5,8 +5,10 @@ def legendre_symbol(a, p):
     http://en.wikipedia.org/wiki/Legendre_symbol
     """
     ls = pow(a, (p - 1)/2, p)
+    print("ls ="+str(ls))
     if ls == p - 1:
         return -1
+    print("je suis dans legendre")
     return ls
 
 def prime_mod_sqrt(a, p):
@@ -39,16 +41,20 @@ def prime_mod_sqrt(a, p):
     while q % 2 == 0:
         s += 1
         q //= 2
-
+    print(q)
     # Select a z which is a quadratic non resudue modulo p
     z = 1
     while legendre_symbol(z, p) != -1:
         z += 1
+    print("z="+str(z))
     c = pow(z, q, p)
-
+    print("c= "+str(c))
     # Search for a solution
+    print("q="+str(q))
     x = pow(a, (q + 1)/2, p)
+    print("x="+str(x))
     t = pow(a, q, p)
+    print("t="+str(t))
     m = s
     while t != 1:
         # Find the lowest i such that t^(2^i) = 1
@@ -64,9 +70,12 @@ def prime_mod_sqrt(a, p):
         t = (t * b * b) % p
         c = (b * b) % p
         m = i
-
+    """    print("Etape tmp")
+        print("x ="+str(x))
+        print("t ="+str(t))
+        print("c ="+str(c))
+        print("m ="+str(m))"""
     return [x, p-x]
 
 
-print(prime_mod_sqrt(73374262606884141115707273454033566877395235714445358559075555771594350964981466135241167630636389899543861945211518965943754597427130197809239412369824532496273652456537263
-,6277101735386680763835789423207666416083908700390324961279))
+print(prime_mod_sqrt(252017,97))
