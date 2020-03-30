@@ -13,6 +13,7 @@ typedef struct courbe_t{
     mpz_t courbe;
     int compute; 
 }courbe_s;
+int set_str(mpz_t *cible, char *chaine);
 int compute(courbe_s *maCourbe, point_s *monPoint);
 int verif(courbe_s *maCourbe, point_s *monPoint);
 int delta(mpz_t *valDelta, courbe_s *maCourbe);

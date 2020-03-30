@@ -7,13 +7,8 @@ int main(int argc, char *argv[]){
    courbe_s maCourbe;
    maCourbe.compute= 0;
    point_s monPoint;
-
-   mpz_init(maCourbe.a);
-   mpz_init(maCourbe.b);
-   mpz_init(maCourbe.mod);
-   mpz_init(maCourbe.courbe);
-   mpz_init(monPoint.x); 
-   mpz_init(monPoint.y);
+   mpz_inits(maCourbe.a, maCourbe.b, maCourbe.mod, maCourbe.courbe, monPoint.x, monPoint.y, NULL);
+   
 
 //PARAMETRE DE LA COUBRE JEU DE donné NIST P-192//
 /*
@@ -25,9 +20,9 @@ int main(int argc, char *argv[]){
 /////////////////////////////////////////////////
 
 //PARAMETRE DE LA COUBRE Jeu de donné secp521r1 2.6.1//
-   char a[]="6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057148";
-   char b[]="1093849038073734274511112390766805569936207598951683748994586394495953116150735016013708737573759623248592132296706313309438452531591012912142327488478985984";
-   char mod[]="6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057151";
+   char a[]="0x1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC";
+   char b[]="0x51953EB9618E1C9A1F929A21A0B68540EEA2DA725B99B315F3B8B489918EF109E156193951EC7E937B1652C0BD3BB1BF073573DF883D2C34F1EF451FD46B503F00";
+   char mod[]="0x1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
    char x[]="5643160416518163681998572717474472531537062926119805907462451943276389080336747116833706857713415576423540238778062829890660938581438215463331638935315181824"; 
 /////////////////////////////////////////////////
 
@@ -40,10 +35,12 @@ int main(int argc, char *argv[]){
    char x[]="63";
 */
    //x=63,a=31,b=17 et p=97
-   mpz_set_str(maCourbe.a,a, 10);
-   mpz_set_str(maCourbe.b,b, 10);
-   mpz_set_str(maCourbe.mod,mod, 10);
-   mpz_set_str(monPoint.x,x, 10);
+   //
+   set_str(&maCourbe.a, a);
+   set_str(&maCourbe.a,a);
+   set_str(&maCourbe.b,b);
+   set_str(&maCourbe.mod,mod);
+   set_str(&monPoint.x,x);
 
    printf(" \n a =");
    mpz_out_str(stdout,10,maCourbe.a);
@@ -61,6 +58,9 @@ int main(int argc, char *argv[]){
  * si b² - 4ac = 0, une solution −b/2a
  * si delta > 0 x1=−b−sqrt(Δ)/(2a) et x2=−b+sqrt(Δ)/2a
  */
+
+
+   
     compute( &maCourbe,&monPoint);
     mpz_t res1;
     mpz_t res2;

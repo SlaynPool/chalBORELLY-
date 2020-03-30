@@ -25,6 +25,79 @@ int compute(courbe_s *maCourbe, point_s *monPoint){
     return maCourbe->compute;
 }
 
+int strLen(char *str){
+    int i;
+    for(i=0;;i++){
+        if( str[i]=='\0'){
+            return i;
+        }
+    }
+}
+
+char* alloc(int taille){ // RECUPERATION DE CODE DE RT2
+    //On fera notre Malloc et on renverra le pointeur de notre tableau
+    char* pointeur = NULL; //Declaration de notre pointeur
+    pointeur = (char*) malloc(taille * sizeof(char)); //Allocation de la memoire malloc avec cast du void*(renvoyer par malloc) => int*
+    // On check si c'est ok
+    if(pointeur == NULL){ //check de si ca n'a pas marché
+        printf("MALLOC FAIL");
+        exit(0);
+    }
+    return  pointeur; //Retourne le pointeur
+}
+
+void remove0x(char *new, char *old, int taille){
+    int i;
+    int a; 
+    a=0;
+    for (i=2;i<taille; i++){
+        new[a]=old[i];
+        a++;
+    } 
+    
+
+
+}
+
+
+
+
+int set_str(mpz_t *cible, char *chaine){
+    if(chaine[0]=='0'){
+       if(chaine[1]=='x'){
+            int taille;
+            taille = strLen(chaine);
+            char* new_char;
+            new_char= alloc(taille);
+            remove0x(new_char, chaine, taille);
+            mpz_set_str(*cible, new_char, 16);
+            return 0;
+       }else{
+           mpz_set_str(*cible, chaine, 10);
+           return 0;
+       }
+    }else{
+        mpz_set_str(*cible, chaine, 10);
+        return 0;
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int delta(mpz_t *valDelta, courbe_s *maCourbe){
     //b^2-4ac ON aura toujours une fonction f(x)= x^2-courbe
     //a=1 b=0 c=-courbe donc 
