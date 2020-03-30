@@ -18,22 +18,22 @@ int main(int argc, char *argv[]){
    char x[]="4186469355574186740522149727049440186996809918465310609521"; 
 */
 /////////////////////////////////////////////////
-
+/*
 //PARAMETRE DE LA COUBRE Jeu de donné secp521r1 2.6.1//
     char a[]="0x1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC";
     char b[]="0x51953EB9618E1C9A1F929A21A0B68540EEA2DA725B99B315F3B8B489918EF109E156193951EC7E937B1652C0BD3BB1BF073573DF883D2C34F1EF451FD46B503F00";
     char mod[]="0x1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
     char x[]="5643160416518163681998572717474472531537062926119805907462451943276389080336747116833706857713415576423540238778062829890660938581438215463331638935315181824"; 
 /////////////////////////////////////////////////
-
+*/
 
 // Jeu de donné de l'ennocé
-/*
+
    char a[]="31";
    char b[]="17";
    char mod[]="97";
    char x[]="63";
-*/
+
    //x=63,a=31,b=17 et p=97
    //
     set_str(&maCourbe.a, a);
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
     mpz_init(res1);
     mpz_init(res2);
    
-    if(TonnelliShanks(&res1,&res2, &maCourbe.courbe, &maCourbe.mod)==0){
+    if(cipolla(&res1,&res2, &maCourbe.courbe, &maCourbe.mod)==0){
         printf("\n2solutions\n-------------------------------------------------\ny=");
         mpz_out_str(stdout,10,res1);
         printf("\n-------------------------------------------------");
